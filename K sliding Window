@@ -1,0 +1,43 @@
+Design a data structure to calculate the moving product of all elements in a sliding window of size k.
+
+
+class SlidingWindow:
+    def __init__(self, k):
+        self.k, self.i = k, 0
+        self.data = [None] * k
+        self.n0, self.prod, = 0, 1
+
+    def add(self, x):
+        old_val = self.data[self.i]
+        if old_val == 0:
+            self.n0 -= 1
+        elif old_val is not None:
+            self.prod //= old_val
+        self.data[self.i] = x
+        if x == 0:
+            self.n0 += 1
+        else:
+            self.prod *= x
+        self.i = (self.i + 1) % self.k
+        
+    def getProduct(self):
+        return self.prod * (self.n0 == 0)
+    
+window = SlidingWindow(3)
+window.add(1) # [1, None, None], n0 = 0
+window.add(2) # [1, 2, None], n0 = 0
+print(window.getProduct(), 2)
+window.add(3); # [1, 2, 3], n0 = 0
+print(window.getProduct(), 6)
+window.add(4); # [4, 2, 3], n0 = 0
+print(window.getProduct(), 24)
+window.add(0); # [4, 0, 3], n0 = 1
+print(window.getProduct(), 0)
+window.add(0); # [4, 0, 0], n0 = 2
+print(window.getProduct(), 0)
+window.add(2); # [2, 0, 0], n0 = 2
+print(window.getProduct(), 0)
+window.add(4); # [2, 4, 0], n0 = 1
+print(window.getProduct(), 0)
+window.add(5); # [2, 4, 5], n0 = 0
+print(window.getProduct(), 40)
